@@ -1,18 +1,23 @@
 
 pipeline {
     agent any
+stages {
 
-    stages {
-        stage('Maven Version') {
+        stage('Build') {
             steps {
-               bat label: '', script: 'mvn -v'
+             sh 'mvn -B -DskipTests clean package'
             }
         }
-        stage('Running Test') {
+        stage('Test') {
             steps {
-               bat label: '', script: 'mvn clean test'
+            sh 'mvn test'
         }
+         post{
+              always{
+            junit 'target/surefire-report/*.xml'
        }
 
     }
+}
+}
 }
